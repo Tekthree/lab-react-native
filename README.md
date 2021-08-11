@@ -5,7 +5,7 @@
 
 ## Deployment and test
   * [test page](https://expo.dev/@tekthree/lab-react-native-app)
-  * [deployment](exp://exp.host/@tekthree/lab-react-native-app)
+  * [deployment](exp://exp.host/@tekthree/lab-react-native-app) exp://exp.host/@tekthree/lab-react-native-app
 
 
 ## About
