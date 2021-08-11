@@ -1,11 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
+
+const getColor = ()=>{
+  const colorArr = ['blue','red','green','blue', 'yellow'];
+  
+
+}
+
+
+
 const Task = (props) =>{
   return(
     <View style={styles.item}>
       <View style={styles.itemLeft}>
-        <View style={styles.square}></View>
+        <View style={styles.square}> </View>
         <Text>{props.text}</Text>
       </View>
       <View style={styles.circular}></View>
@@ -31,7 +40,7 @@ const styles = StyleSheet.create({
   square:{
     width:24,
     height: 24,
-    backgroundColor: 'green',
+    backgroundColor: getColor(),
     opacity: 0.4,
     borderRadius: 5,
     marginRight: 15
