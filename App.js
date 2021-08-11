@@ -2,11 +2,14 @@
 import React, {useState} from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard } from "react-native";
 import Task from './components/Task';
+import qs from 'qs';
+import { Linking } from 'react-native';
 
 
 export default function App() {
   const [task, setTask] =useState();
   const [taskArr, setTaskArr] = useState([]);
+ 
 
   const taskHandler = () => {
     Keyboard.dismiss();
@@ -20,11 +23,59 @@ export default function App() {
     setTaskArr(itemsCopy);
   }
 
+  async function sendEmail(to, subject, body, options = {}) {
+    const { cc, bcc } = options;
+
+    let url = `mailto:${to}`;
+
+    // link query
+    const query = qs.stringify({
+        subject: subject,
+        body: body,
+        cc: cc,
+        bcc: bcc
+    });
+
+    if (query.length) {
+        url += `?${query}`;
+    }
+
+    // see if linking is available to use
+    const canOpen = await Linking.canOpenURL(url);
+
+    if (!canOpen) {
+        throw new Error('Provided URL can not be handled');
+    }
+
+    return Linking.openURL(url);
+  }
+
+  const runEmail = ()=>{
+    let itemsCopy = [...taskArr];
+    let taskString = itemsCopy.toString();
+    console.log(taskString)
+    sendEmail(
+      'test@gmail.com',
+      'Greeting!',
+      taskString
+    ).then(() => {
+        console.log('Our email successful provided to device mail ');
+    });
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.taskWrapper}>
-        <Text style={styles.sectionTitle}>Todo List</Text>
+
+         <View style={styles.headerWrapper}>
+
+          <Text style={styles.sectionTitle}>To-do List</Text>
+          <TouchableOpacity onPress={()=> runEmail()} >
+            <View style={styles.addWrapper}>
+              <Text style={styles.addText}>📧</Text>
+            </View>
+          </TouchableOpacity>
+         </View>
 
         <View style={styles.items}>
         
@@ -52,12 +103,15 @@ export default function App() {
           value={task}
           onChangeText={text => setTask(text)}
         ></TextInput>
+
         <TouchableOpacity onPress={()=> taskHandler()} >
           <View style={styles.addWrapper}>
             <Text style={styles.addText}>➕</Text>
           </View>
         </TouchableOpacity>
+       
       </KeyboardAvoidingView>
+        
 
       
     </View>
@@ -109,4 +163,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   addText:{},
+  headerWrapper:{
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  }
 });
